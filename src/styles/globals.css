@@ -71,15 +71,27 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground relative;
   }
   h1 {
     @apply text-4xl font-semibold;
   }
   h2 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-medium;
   }
   h3 {
-    @apply text-lg font-medium;
+    @apply text-lg font-semibold;
   }
+}
+
+html,
+body {
+  overscroll-behavior: none;
+  height: 100svh;
+  width: 100vw;
+  flex: 1;
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
