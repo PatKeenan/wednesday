@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 
-import { HomeIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { HomeIcon } from "@radix-ui/react-icons";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   {
@@ -13,35 +17,54 @@ const navItems = [
   {
     href: "/dashboard/golfers",
     label: "Golfers",
-    image: "/golf-icon.png",
+    image: "/golf-icon.svg",
   },
   {
     href: "/dashboard/rounds",
     label: "Rounds",
-    icon: ReloadIcon,
+    image: "/golf-cart.svg",
   },
   {
     href: "/dashboard/courses",
     label: "Courses",
-    image: "/rounds.png",
+    image: "/course-icon.svg",
   },
 ];
 export const TabNavigation = () => {
+  // get the current route
+
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (pathname == "/dashboard" && href == "/dashboard") {
+      return true;
+    } else if (pathname !== "/dashboard" && href.includes(pathname)) {
+      return true;
+    }
+
+    return false;
+  };
   return (
     <div>
       <nav>
-        <ul className="flex items-center justify-around px-6 text-black">
+        <ul className="text-foreground flex items-center justify-around px-6">
           {navItems.map((item) => (
-            <li key={item.href}>
+            <li
+              key={item.href}
+              className={cn(
+                isActive(item.href) ? "border-primary " : "border-transparent",
+                "border-b-2 pb-3 transition-all duration-150 ease-in-out",
+              )}
+            >
               <Link href={item.href}>
-                {item.icon && <item.icon className="-mb-1 h-7 w-7" />}
+                {item.icon && <item.icon className="h-7  w-7" />}
                 {item.image && (
                   <Image
                     src={item.image}
                     alt="icon"
                     height={30}
                     width={30}
-                    className="aspect-square h-7 w-7 bg-blend-darken"
+                    className="aspect-square h-7 w-7"
                   />
                 )}
                 <span className="sr-only">{item.label}</span>

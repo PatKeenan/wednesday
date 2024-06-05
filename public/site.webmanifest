@@ -3,6 +3,7 @@
   "short_name": "Wednesday",
   "start_url": ".",
   "orientation": "portrait",
+
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -15,8 +16,8 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#eee6d3",
-  "background_color": "#eee6d3",
+  "theme_color": "#F2E7DC",
+  "background_color": "#F2E7DC",
   "display": "standalone",
   "shortcuts": [
     {

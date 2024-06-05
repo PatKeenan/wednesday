@@ -6,6 +6,18 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 import type { Round } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { RoundStatus } from "@/components/RoundStatus";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { NewRoundForm } from "@/components-feat/NewRoundForm";
 
 const rounds: Round[] = [
   {
@@ -13,6 +25,19 @@ const rounds: Round[] = [
     id: "",
     golfers: [],
     scores: [],
+    status: "upcoming",
+    course: {
+      holes: [],
+      name: "Cream Ridge",
+      id: "1",
+    },
+  },
+  {
+    date: "Wed 5/28/24",
+    id: "",
+    golfers: [],
+    scores: [],
+    status: "completed",
     course: {
       holes: [],
       name: "Cream Ridge",
@@ -29,7 +54,7 @@ export const DashboardScreen = () => {
     <div className="flex flex-1 flex-grow flex-col">
       <Image
         priority
-        src="/wed-gc.jpg"
+        src="/wed-gc-no-bg.png"
         alt="wed-gc"
         height={200}
         width={200}
@@ -37,23 +62,36 @@ export const DashboardScreen = () => {
       />
       <div className="flex flex-1 flex-grow flex-col space-y-10">
         <div className="flex">
-          <Button className="h-12 w-full space-x-1" asChild>
-            <Link href="/dashboard/rounds/new">
-              <PlusIcon className="-ml-3 h-5 w-5" />
-              <span>New Round</span>
-            </Link>
-          </Button>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button className="h-12 w-full space-x-1">
+                <PlusIcon className="-ml-3 h-5 w-5" />
+                <span>New Round</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="pb-4">
+              <DrawerHeader>
+                <DrawerTitle>New Round</DrawerTitle>
+              </DrawerHeader>
+              <NewRoundForm />
+              <DrawerFooter>
+                <DrawerClose>
+                  <Button variant="ghost">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
         <div className="flex flex-grow-0 flex-col space-y-1">
           <h3>Rounds</h3>
-          <ul className="min-h-[75px] space-y-0.5 font-light">
+          <ul className="min-h-[75px] space-y-2 font-light">
             {rounds.map((round) => (
               <div key={round.id} className="flex space-x-4">
                 <time>
                   {round.date} @ {round.course.name}
                 </time>
-                <div className="bg-accent/20 border-accent/40 flex items-center justify-center rounded-full border px-4 py-0.5 text-xs text-red-800">
-                  <span>UPCOMING</span>
+                <div>
+                  {round.status && <RoundStatus status={round.status} />}
                 </div>
               </div>
             ))}
@@ -61,7 +99,7 @@ export const DashboardScreen = () => {
         </div>
         <div className="flex flex-grow-0 flex-col space-y-1">
           <h3>Golfers</h3>
-          <ul className="min-h-[75px] space-y-0.5 overflow-auto font-light">
+          <ul className="min-h-[75px] space-y-2 overflow-auto font-light">
             {rounds.map((round) => (
               <div key={round.id}>
                 <time>

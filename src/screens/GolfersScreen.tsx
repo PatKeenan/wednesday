@@ -14,12 +14,6 @@ export const GolfersScreen = () => {
     <div className="h-full space-y-10 overflow-auto pt-8">
       <div className="flex justify-between">
         <h2 className="mt-auto">Golfers</h2>
-        <Button className="space-x-1" asChild>
-          <Link href="/dashboard/golfers/new">
-            <PlusIcon className="-ml-3 h-5 w-5" />
-            <span>New</span>
-          </Link>
-        </Button>
       </div>
       <ul className="flex flex-grow flex-col gap-4">
         {golfers.map((golfer) => (
