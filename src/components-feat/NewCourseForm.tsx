@@ -3,6 +3,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import {
   Form,
@@ -13,14 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { courseSchema, type CourseSchema } from "@/types";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { cn } from "@/lib/utils";
-import { numeric } from "drizzle-orm/pg-core";
+
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
+
+import { courseSchema, type CourseSchema } from "@/types";
 
 export const NewCourseForm = ({
   defaultValues,

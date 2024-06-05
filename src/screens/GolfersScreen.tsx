@@ -1,8 +1,4 @@
-import Link from "next/link";
 import React from "react";
-
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@radix-ui/react-icons";
 
 export const GolfersScreen = () => {
   const golfers = [
@@ -24,7 +20,7 @@ export const GolfersScreen = () => {
   );
 };
 
-const GolferCard = ({ name, id }: { name: string; id: string }) => {
+const GolferCard = ({ name }: { name: string; id: string }) => {
   return (
     <div className="border-foreground/20 flex h-[60px] items-center justify-center rounded-lg border bg-white/80 text-sm font-semibold">
       <p>{name}</p>

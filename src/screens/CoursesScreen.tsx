@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -60,7 +59,7 @@ export const CoursesScreen = () => {
   );
 };
 
-export const CourseCard = ({ id, name }: Course) => {
+export const CourseCard = ({ name }: Course) => {
   return (
     <div>
       <time>@{name}</time>

@@ -1,12 +1,10 @@
 import Image from "next/image";
 import React from "react";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 import type { Round } from "@/types";
-import { Badge } from "@/components/ui/badge";
 import { RoundStatus } from "@/components/RoundStatus";
 import {
   Drawer,
