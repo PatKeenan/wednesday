@@ -7,14 +7,13 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
-import { fakeCourses, fakeGolfers, RoundSchema, roundSchema } from "@/types";
+import type { RoundSchema } from "@/types";
 
 import type { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -27,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { roundInsertSchema } from "@/server/db/schema";
 
 function formatDate(date: Date) {
   const localDate = new Date(
@@ -44,21 +44,20 @@ export const NewRoundForm = ({
 }: {
   defaultValues?: RoundSchema;
 }) => {
-  const formSchema = roundSchema.omit({ id: true });
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof roundInsertSchema>>({
+    resolver: zodResolver(roundInsertSchema),
     defaultValues: {
       ...defaultValues,
       completed: defaultValues?.completed ?? false,
       numHoles: defaultValues?.numHoles ?? 18,
-      golfers: defaultValues?.golfers ?? [],
+      /*   golfers: defaultValues?.golfers ?? [],
       scores: defaultValues?.scores ?? [],
       status: defaultValues?.status ?? "pending",
-      date: defaultValues?.date ?? formatDate(new Date()),
+      date: defaultValues?.date ?? formatDate(new Date()), */
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  function onSubmit(data) {
     console.log(data);
   }
 
@@ -69,7 +68,7 @@ export const NewRoundForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex h-full w-full flex-1 flex-grow flex-col space-y-8"
         >
-          <div className="flex flex-grow flex-col space-y-4">
+          {/* <div className="flex flex-grow flex-col space-y-4">
             <FormField
               control={form.control}
               name="date"
@@ -200,7 +199,7 @@ export const NewRoundForm = ({
               )}
             />
           </div>
-
+ */}
           <Button
             /* disabled={!form.formState.isValid} */
 

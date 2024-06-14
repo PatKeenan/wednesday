@@ -18,30 +18,40 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
-
-import { courseSchema, type CourseSchema } from "@/types";
+import { DrawerTrigger } from "@/components/ui/drawer";
+import { courseInsertSchema } from "@/server/db/schema";
+import { api } from "@/trpc/react";
 
 export const NewCourseForm = ({
   defaultValues,
 }: {
-  defaultValues?: CourseSchema;
+  defaultValues?: z.infer<typeof courseInsertSchema>;
+  onSave?: () => void;
 }) => {
-  const formSchema = courseSchema.omit({ id: true, holes: true }).extend({
-    numberOfHoles: z.string().default("18"),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const utils = api.useUtils();
+  const form = useForm<z.infer<typeof courseInsertSchema>>({
+    resolver: zodResolver(courseInsertSchema),
     defaultValues: {
       ...defaultValues,
       name: defaultValues?.name,
-      numberOfHoles:
-        defaultValues?.holes && defaultValues?.holes?.length === 9 ? "9" : "18",
+      holes: defaultValues?.holes ?? 18,
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
+  const { mutate, isPending, isError, isSuccess } =
+    api.course.createCourse.useMutation({
+      onSettled: async () => {
+        await utils.course.invalidate();
+        setTimeout(() => {
+          triggerRef.current?.click();
+        }, 500);
+      },
+    });
+
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+
+  function onSubmit(data: z.infer<typeof courseInsertSchema>) {
+    mutate(data);
   }
 
   React.useEffect(() => {
@@ -73,13 +83,15 @@ export const NewCourseForm = ({
             />
             <FormField
               control={form.control}
-              name="numberOfHoles"
+              name="holes"
               render={({ field }) => (
                 <FormItem className="space-y-3">
                   <FormLabel>Number of Holes</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={field.onChange}
+                      onValueChange={(n: string) =>
+                        field.onChange(parseInt(n, 10))
+                      }
                       defaultValue={String(field.value) ?? "18"}
                       className="flex space-x-4"
                     >
@@ -102,12 +114,13 @@ export const NewCourseForm = ({
               )}
             />
           </div>
+          <DrawerTrigger ref={triggerRef}></DrawerTrigger>
           <Button
-            disabled={!form.formState.isValid}
+            disabled={!form.formState.isValid || isPending}
             type="submit"
             className="flex-shrink-0 disabled:opacity-60"
           >
-            Save
+            {isPending ? "Saving..." : isSuccess ? "Success!" : "Save"}
           </Button>
         </form>
       </Form>

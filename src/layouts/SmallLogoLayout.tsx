@@ -1,13 +1,13 @@
 import * as React from "react";
 import Image from "next/image";
 
-export default function SmallImageHeaderLayout({
+export const SmallILogoLayout = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) => {
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-full flex-1 flex-col overflow-hidden">
       <Image
         priority
         src="/wed-gc-no-bg.png"
@@ -19,4 +19,4 @@ export default function SmallImageHeaderLayout({
       {children}
     </div>
   );
-}
+};

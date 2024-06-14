@@ -79,7 +79,7 @@ export default function RootLayout({
           media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
         />
       </head>
-      <body className="h-full w-full flex-1 overflow-auto">
+      <body className="mx-auto h-full w-full max-w-lg flex-1 overflow-y-auto overflow-x-hidden">
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>
