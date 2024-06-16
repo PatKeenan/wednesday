@@ -26,7 +26,11 @@ import {
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { roundInsertSchema } from "@/server/db/schema";
+import {
+  roundInsertSchema,
+  roundInsertWithGolfersSchema,
+} from "@/server/db/schema";
+import { api } from "@/trpc/react";
 
 function formatDate(date: Date) {
   const localDate = new Date(
@@ -36,7 +40,10 @@ function formatDate(date: Date) {
   // Optionally remove second/millisecond if needed
   localDate.setSeconds(0);
   localDate.setMilliseconds(0);
-  return localDate.toISOString().slice(0, -1);
+  return {
+    localDate,
+    formatted: localDate.toISOString().slice(0, -1),
+  };
 }
 
 export const NewRoundForm = ({
@@ -44,22 +51,39 @@ export const NewRoundForm = ({
 }: {
   defaultValues?: RoundSchema;
 }) => {
-  const form = useForm<z.infer<typeof roundInsertSchema>>({
-    resolver: zodResolver(roundInsertSchema),
+  const { data, isLoading, isError } =
+    api.course.getNewRoundFormOptions.useQuery();
+
+  const { golfers, courses } = React.useMemo(
+    () => ({
+      golfers: data?.golfers ?? [],
+      courses: data?.courses ?? [],
+    }),
+    [data],
+  );
+
+  const golferIds = React.useMemo(
+    () => golfers.map(({ id }) => ({ id })) ?? [],
+    [golfers],
+  );
+
+  const { mutate } = api.round.createRound.useMutation();
+
+  const form = useForm<z.infer<typeof roundInsertWithGolfersSchema>>({
+    resolver: zodResolver(roundInsertWithGolfersSchema),
     defaultValues: {
       ...defaultValues,
       completed: defaultValues?.completed ?? false,
       numHoles: defaultValues?.numHoles ?? 18,
-      /*   golfers: defaultValues?.golfers ?? [],
-      scores: defaultValues?.scores ?? [],
+      golferIds: golferIds,
       status: defaultValues?.status ?? "pending",
-      date: defaultValues?.date ?? formatDate(new Date()), */
+      date: defaultValues?.date ?? formatDate(new Date()).localDate,
     },
   });
 
-  function onSubmit(data) {
-    console.log(data);
-  }
+  const onSubmit = (data: z.infer<typeof roundInsertWithGolfersSchema>) => {
+    mutate(data);
+  };
 
   return (
     <div className="flex min-h-[450px] flex-col space-y-6 px-6 ">
@@ -68,28 +92,33 @@ export const NewRoundForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex h-full w-full flex-1 flex-grow flex-col space-y-8"
         >
-          {/* <div className="flex flex-grow flex-col space-y-4">
+          <div className="flex flex-grow flex-col space-y-4">
             <FormField
               control={form.control}
               name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date & Time</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="datetime-local"
-                      className="focus:text-[20px]"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                const { value, onChange, ...fieldRest } = field;
+                return (
+                  <FormItem>
+                    <FormLabel>Date & Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={formatDate(value).formatted}
+                        onChange={(e) => onChange(new Date(e.target.value))}
+                        type="datetime-local"
+                        className="focus:text-[20px]"
+                        {...fieldRest}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <div className="grid grid-cols-6 gap-x-4">
               <FormField
                 control={form.control}
-                name="course"
+                name="courseId"
                 render={({ field }) => (
                   <FormItem className="col-span-4">
                     <FormLabel>Course</FormLabel>
@@ -97,17 +126,20 @@ export const NewRoundForm = ({
                       <Select
                         onValueChange={(value) =>
                           field.onChange(
-                            fakeCourses.find((c) => c.id === value),
+                            courses?.find((c) => c.id === parseInt(value, 10))
+                              ?.id || null,
                           )
                         }
-                        defaultValue={field.value?.name || undefined}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Course Name ..." />
                         </SelectTrigger>
                         <SelectContent>
-                          {fakeCourses.map((course) => (
-                            <SelectItem key={course.id} value={course.id}>
+                          {courses?.map((course) => (
+                            <SelectItem
+                              key={course.id}
+                              value={course.id.toString()}
+                            >
                               {course.name}
                             </SelectItem>
                           ))}
@@ -129,7 +161,6 @@ export const NewRoundForm = ({
                         type="number"
                         step={9}
                         className="focus:text-[17px]"
-                        defaultValue={field.value}
                       />
                     </FormControl>
                     <FormMessage />
@@ -163,12 +194,12 @@ export const NewRoundForm = ({
 
             <FormField
               control={form.control}
-              name="golfers"
+              name="golferIds"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Golfers</FormLabel>
                   <div className="space-y-3">
-                    {fakeGolfers?.map((golfer) => (
+                    {golfers?.map((golfer) => (
                       <FormItem
                         key={golfer.name}
                         className="flex flex-row items-start space-x-3 space-y-0.5"
@@ -177,14 +208,19 @@ export const NewRoundForm = ({
                           <Checkbox
                             className="h-5 w-5"
                             checked={
-                              field.value.filter((i) => i.id === golfer.id)
-                                .length > 0
+                              field &&
+                              field.value?.some((g) => g.id === golfer.id)
                             }
                             onCheckedChange={(checked) => {
+                              if (!field) return;
+                              const golferFormatted = { id: golfer.id };
                               return checked
-                                ? field.onChange([...field.value, golfer])
+                                ? field.onChange([
+                                    ...(field?.value || []),
+                                    golferFormatted,
+                                  ])
                                 : field.onChange(
-                                    field.value.filter(
+                                    field.value?.filter(
                                       (g) => g.id !== golfer.id,
                                     ),
                                   );
@@ -199,7 +235,7 @@ export const NewRoundForm = ({
               )}
             />
           </div>
- */}
+
           <Button
             /* disabled={!form.formState.isValid} */
 

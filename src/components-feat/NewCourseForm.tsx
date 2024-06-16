@@ -38,15 +38,15 @@ export const NewCourseForm = ({
     },
   });
 
-  const { mutate, isPending, isError, isSuccess } =
-    api.course.createCourse.useMutation({
-      onSettled: async () => {
-        await utils.course.invalidate();
-        setTimeout(() => {
-          triggerRef.current?.click();
-        }, 500);
-      },
-    });
+  // TODO: handle errors
+  const { mutate, isPending, isSuccess } = api.course.createCourse.useMutation({
+    onSettled: async () => {
+      await utils.course.invalidate();
+      setTimeout(() => {
+        triggerRef.current?.click();
+      }, 500);
+    },
+  });
 
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 

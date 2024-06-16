@@ -29,7 +29,7 @@ export const DetailScreenLayout: React.FC<DetailScreenLayoutProps> = ({
   onDeleteClick,
 }) => {
   return (
-    <div className="h-full flex-auto flex-col">
+    <div className="flex h-full w-full flex-1 flex-col">
       <div className="border-foreground/10 absolute left-0 right-0 flex h-12 items-center justify-center border-b">
         <div className="flex w-1/5 flex-shrink-0 justify-start">
           <Button asChild variant="ghost">
@@ -66,7 +66,7 @@ export const DetailScreenLayout: React.FC<DetailScreenLayoutProps> = ({
           </DropdownMenu>
         </div>
       </div>
-      <div className="mt-12 h-full flex-auto flex-grow flex-col pt-4">
+      <div className="mt-12 flex h-full w-full flex-1 flex-grow flex-col pt-4">
         {children}
       </div>
     </div>

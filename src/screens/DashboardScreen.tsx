@@ -31,7 +31,7 @@ export const DashboardScreen = () => {
         className="mx-auto h-[200px] w-auto flex-shrink-0"
       />
       <div className="flex flex-1 flex-grow flex-col space-y-10">
-        <div className="flex">
+        <div className="px-section flex">
           <Drawer>
             <DrawerTrigger asChild>
               <Button className="h-12 w-full space-x-1">
@@ -53,7 +53,7 @@ export const DashboardScreen = () => {
           </Drawer>
         </div>
         <div className="flex flex-grow-0 flex-col space-y-1">
-          <h3>Rounds</h3>
+          <h3 className="pl-section">Rounds</h3>
           <ul className="min-h-[75px] space-y-2 font-light">
             {/* {fakeRounds.map((round) => (
               <div key={round.id} className="flex space-x-4">
@@ -68,7 +68,7 @@ export const DashboardScreen = () => {
           </ul>
         </div>
         <div className="flex flex-grow-0 flex-col space-y-1">
-          <h3>Golfers</h3>
+          <h3 className="pl-section">Golfers</h3>
           <ul className="min-h-[75px] space-y-2 overflow-auto font-light">
             {/* {fakeRounds.map((round) => (
               <div key={round.id}>

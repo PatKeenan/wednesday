@@ -1,20 +1,16 @@
-/* import { roundRouter } from "@/server/api//routers/round";
-import { golferRouter } from "@/server/api/routers/golfer";
-import { holeRouter } from "@/server/api/routers/hole"; */
-import { courseRouter } from "@/server/api/routers/course";
-
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
-/**
- * This is the primary router for your server.
- *
- * All routers added in /api/routers should be manually added here.
- */
+import { courseRouter } from "@/server/api/routers/course";
+import { holeRouter } from "@/server/api/routers/hole";
+import { roundRouter } from "@/server/api/routers/round";
+import { golferRouter } from "@/server/api/routers/golfer";
+
 export const appRouter = createTRPCRouter({
-  /*   round: roundRouter,
+  round: roundRouter,
   golfer: golferRouter,
-  hole: holeRouter, */
+  hole: holeRouter,
   course: courseRouter,
+  holes: holeRouter,
 });
 
 // export type definition of API

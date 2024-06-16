@@ -10,7 +10,7 @@ export const GolfersScreen = () => {
   ];
   return (
     <SmallILogoLayout>
-      <div className="h-full space-y-10 overflow-auto pt-8">
+      <div className="px-section h-full space-y-10 overflow-auto pt-8">
         <div className="flex justify-between">
           <h2 className="mt-auto">Golfers</h2>
         </div>

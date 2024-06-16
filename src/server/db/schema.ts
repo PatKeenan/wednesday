@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { relations, sql } from "drizzle-orm";
 import {
   index,
@@ -11,6 +12,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { type z as zType } from "zod";
 import { type AdapterAccount } from "next-auth/adapters";
 
 export const createTable = pgTableCreator((name) => `mid-week-gc_${name}`);
@@ -71,7 +73,7 @@ export const rounds = createTable(
     id: serial("id").primaryKey(),
     courseId: integer("courseId")
       .notNull()
-      .references(() => courses.id),
+      .references(() => courses.id, { onDelete: "cascade" }),
     date: timestamp("date", { withTimezone: true }).notNull(),
     numHoles: integer("numHoles").default(18),
     status: varchar("status", { length: 255 }),
@@ -88,19 +90,27 @@ export const rounds = createTable(
 );
 
 export const roundInsertSchema = createInsertSchema(rounds);
+export const withGolfersSchema = z.object({
+  golferIds: z.array(golferSelectSchema.pick({ id: true })).optional(),
+});
+
+export const roundInsertWithGolfersSchema =
+  roundInsertSchema.merge(withGolfersSchema);
 export const roundSelectSchema = createSelectSchema(rounds);
 
-export const golfersToRounds = createTable("golfersToRounds", {
+export const golfersToRoundsRelation = createTable("golfersToRounds", {
   round_id: integer("round_id")
     .notNull()
-    .references(() => rounds.id),
+    .references(() => rounds.id, { onDelete: "cascade" }),
   golfer_id: integer("golfer_id")
     .notNull()
     .references(() => golfers.id),
 });
 
-export const roundRelations = relations(rounds, ({ one }) => ({
+export const roundRelations = relations(rounds, ({ one, many }) => ({
   course: one(courses, { fields: [rounds.courseId], references: [courses.id] }),
+  scores: many(scores),
+  golfers: many(golfersToRoundsRelation),
 }));
 
 export const courses = createTable(
@@ -130,10 +140,10 @@ export const holes = createTable(
     id: serial("id").primaryKey(),
     courseId: integer("courseId")
       .notNull()
-      .references(() => courses.id),
+      .references(() => courses.id, { onDelete: "cascade" }),
     holeNumber: integer("holeNumber").notNull(),
-    par: integer("par").notNull(),
-    yards: integer("yards").notNull(),
+    par: integer("par"),
+    yards: integer("yards"),
     description: text("description"),
   },
   (hole) => ({
@@ -147,6 +157,8 @@ export const holeRelations = relations(holes, ({ one }) => ({
 
 export const holeInsertSchema = createInsertSchema(holes);
 export const holeSelectSchema = createSelectSchema(holes);
+export type HoleSelect = zType.infer<typeof holeSelectSchema>;
+export type HolesInsert = zType.infer<typeof holeInsertSchema>;
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),

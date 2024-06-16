@@ -14,7 +14,6 @@ import {
 
 import type { CourseSchema, RoundSchema } from "@/types";
 import { NewRoundForm } from "@/components-feat/NewRoundForm";
-import { api } from "@/trpc/server";
 import { SmallILogoLayout } from "@/layouts/SmallLogoLayout";
 
 export const RoundsScreen = () => {
@@ -24,7 +23,7 @@ export const RoundsScreen = () => {
   return (
     <SmallILogoLayout>
       <div className="h-full space-y-10 overflow-auto pt-8">
-        <div className="flex justify-between">
+        <div className="px-section flex justify-between">
           <h2 className="mt-auto">Rounds</h2>
           <div className="flex">
             <Drawer>

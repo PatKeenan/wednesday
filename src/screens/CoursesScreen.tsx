@@ -22,7 +22,7 @@ export const CoursesScreen = async () => {
   return (
     <SmallILogoLayout>
       <div className="flex flex-1 flex-grow flex-col overflow-hidden pt-8">
-        <div className="flex flex-shrink-0 justify-between pb-2">
+        <div className="px-section flex flex-shrink-0 justify-between pb-2">
           <h2 className="mt-auto">Courses</h2>
           <div className="flex">
             <Drawer>

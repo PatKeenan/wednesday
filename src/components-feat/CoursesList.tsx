@@ -33,8 +33,8 @@ export const CoursesList = () => {
       Loading Courses...
     </div>
   ) : (
-    <ScrollArea className="-mx-5 px-3">
-      <ul className="flex flex-col gap-3 px-3 py-3">
+    <ScrollArea className="px-section">
+      <ul className="flex flex-col gap-3 py-3">
         {coursesQuery?.map((course) => (
           <Link key={course.id} href={`/dashboard/courses/${course.id}`}>
             <CourseCard {...course} />

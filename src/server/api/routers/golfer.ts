@@ -5,9 +5,6 @@ export const golferRouter = createTRPCRouter({
   getGolfers: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.golfers.findMany({
       orderBy: (golfer, { asc }) => [asc(golfer.name)],
-      with: {
-        rounds: true,
-      },
     });
   }),
   getGolfer: publicProcedure
@@ -15,9 +12,6 @@ export const golferRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.golfers.findFirst({
         where: (golfer, { eq }) => eq(golfer.id, input.id),
-        with: {
-          rounds: true,
-        },
       });
     }),
 });
