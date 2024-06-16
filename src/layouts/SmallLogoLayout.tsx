@@ -7,7 +7,7 @@ export const SmallILogoLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden">
+    <div className="flex h-full flex-1 flex-col overflow-auto">
       <Image
         priority
         src="/wed-gc-no-bg.png"

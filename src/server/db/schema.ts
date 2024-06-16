@@ -60,12 +60,36 @@ export const golfers = createTable(
 );
 
 export const golferRelations = relations(golfers, ({ many }) => ({
-  rounds: many(rounds),
-  scores: many(scores),
+  golfersToRounds: many(golfersToRounds),
 }));
 
 export const golferInsertSchema = createInsertSchema(golfers);
 export const golferSelectSchema = createSelectSchema(golfers);
+
+export const golfersToRounds = createTable("golfersToRounds", {
+  round_id: integer("round_id")
+    .notNull()
+    .references(() => rounds.id, { onDelete: "cascade" }),
+  golfer_id: integer("golfer_id")
+    .notNull()
+    .references(() => golfers.id),
+});
+
+export const golfersToRoundsRelations = relations(
+  golfersToRounds,
+  ({ one }) => ({
+    golfer: one(golfers, {
+      fields: [golfersToRounds.golfer_id],
+      references: [golfers.id],
+    }),
+    round: one(rounds, {
+      fields: [golfersToRounds.round_id],
+      references: [rounds.id],
+    }),
+  }),
+);
+
+export type GolferSelect = zType.infer<typeof golferSelectSchema>;
 
 export const rounds = createTable(
   "round",
@@ -98,19 +122,16 @@ export const roundInsertWithGolfersSchema =
   roundInsertSchema.merge(withGolfersSchema);
 export const roundSelectSchema = createSelectSchema(rounds);
 
-export const golfersToRoundsRelation = createTable("golfersToRounds", {
-  round_id: integer("round_id")
-    .notNull()
-    .references(() => rounds.id, { onDelete: "cascade" }),
-  golfer_id: integer("golfer_id")
-    .notNull()
-    .references(() => golfers.id),
-});
+export type RoundSelect = zType.infer<typeof roundSelectSchema>;
+export type RoundSelectWithCourseAndGolfers = RoundSelect & {
+  course?: { id: number; name: string };
+  golfers?: { golfer: { id: number; name: string } }[];
+};
 
 export const roundRelations = relations(rounds, ({ one, many }) => ({
   course: one(courses, { fields: [rounds.courseId], references: [courses.id] }),
   scores: many(scores),
-  golfers: many(golfersToRoundsRelation),
+  golfers: many(golfersToRounds),
 }));
 
 export const courses = createTable(

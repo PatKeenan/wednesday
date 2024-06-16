@@ -4,6 +4,7 @@ import { courseRouter } from "@/server/api/routers/course";
 import { holeRouter } from "@/server/api/routers/hole";
 import { roundRouter } from "@/server/api/routers/round";
 import { golferRouter } from "@/server/api/routers/golfer";
+import { generalRouter } from "./routers/general";
 
 export const appRouter = createTRPCRouter({
   round: roundRouter,
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   hole: holeRouter,
   course: courseRouter,
   holes: holeRouter,
+  general: generalRouter,
 });
 
 // export type definition of API

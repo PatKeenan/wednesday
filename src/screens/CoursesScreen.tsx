@@ -48,7 +48,7 @@ export const CoursesScreen = async () => {
             </Drawer>
           </div>
         </div>
-        <div className="border-t-foreground/10 flex flex-grow flex-col overflow-hidden ">
+        <div className="border-t-foreground/10 flex flex-grow flex-col overflow-hidden">
           <CoursesList />
         </div>
       </div>

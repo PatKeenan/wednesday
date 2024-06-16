@@ -15,6 +15,7 @@ import {
 import type { CourseSchema, RoundSchema } from "@/types";
 import { NewRoundForm } from "@/components-feat/NewRoundForm";
 import { SmallILogoLayout } from "@/layouts/SmallLogoLayout";
+import { RoundsList } from "@/components-feat/RoundsList";
 
 export const RoundsScreen = () => {
   /* const roundsQuery = api.c */
@@ -22,7 +23,7 @@ export const RoundsScreen = () => {
   /////////////////////////
   return (
     <SmallILogoLayout>
-      <div className="h-full space-y-10 overflow-auto pt-8">
+      <div className="h-full space-y-10 pt-8">
         <div className="px-section flex justify-between">
           <h2 className="mt-auto">Rounds</h2>
           <div className="flex">
@@ -48,11 +49,7 @@ export const RoundsScreen = () => {
           </div>
         </div>
 
-        <ul className="flex flex-grow flex-col gap-4">
-          {/* {rounds.map((round) => (
-          <RoundsCard key={round.id} {...round} />
-        ))} */}
-        </ul>
+        <RoundsList />
       </div>
     </SmallILogoLayout>
   );

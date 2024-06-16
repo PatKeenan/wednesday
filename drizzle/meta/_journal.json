@@ -15,6 +15,27 @@
       "when": 1718382649352,
       "tag": "0001_organic_starfox",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1718544879466,
+      "tag": "0002_yummy_master_mold",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1718545530919,
+      "tag": "0003_long_nekra",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1718545796204,
+      "tag": "0004_odd_vulture",
+      "breakpoints": true
     }
   ]
 }

@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import type { RoundSchema } from "@/types";
+import type { RoundSchema, RoundStatusType } from "@/types";
 
 import type { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -31,20 +31,17 @@ import {
   roundInsertWithGolfersSchema,
 } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { formatDate } from "@/lib/utils";
 
-function formatDate(date: Date) {
-  const localDate = new Date(
-    (date as unknown as number) - date.getTimezoneOffset() * 60000,
-  ); //offset in milliseconds. Credit https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
-
-  // Optionally remove second/millisecond if needed
-  localDate.setSeconds(0);
-  localDate.setMilliseconds(0);
-  return {
-    localDate,
-    formatted: localDate.toISOString().slice(0, -1),
-  };
-}
+const roundStatusOptions: RoundStatusType[] = [
+  "upcoming",
+  "booked",
+  "completed",
+  "pending",
+  "in-progress",
+  "canceled",
+  "rescheduled",
+];
 
 export const NewRoundForm = ({
   defaultValues,
@@ -52,7 +49,7 @@ export const NewRoundForm = ({
   defaultValues?: RoundSchema;
 }) => {
   const { data, isLoading, isError } =
-    api.course.getNewRoundFormOptions.useQuery();
+    api.general.getNewRoundFormOptions.useQuery();
 
   const { golfers, courses } = React.useMemo(
     () => ({
@@ -177,13 +174,18 @@ export const NewRoundForm = ({
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={"Booked"}
+                      defaultValue={roundStatusOptions[0]}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
+
                       <SelectContent>
-                        <SelectItem value="Booked">Booked</SelectItem>
+                        {roundStatusOptions.map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>

@@ -15,22 +15,21 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { NewRoundForm } from "@/components-feat/NewRoundForm";
+import { RoundsList } from "@/components-feat/RoundsList";
+import { GolfersList } from "@/components-feat/GolfersList";
 
 export const DashboardScreen = () => {
-  // TODO: getRounds
-  // TODO: getGolfers
-
   return (
-    <div className="flex flex-1 flex-grow flex-col">
+    <div className="h-full overflow-auto">
       <Image
         priority
         src="/wed-gc-no-bg.png"
         alt="wed-gc"
         height={200}
         width={200}
-        className="mx-auto h-[200px] w-auto flex-shrink-0"
+        className="mx-auto h-[200px] w-auto flex-shrink-0 "
       />
-      <div className="flex flex-1 flex-grow flex-col space-y-10">
+      <div className="space-y-10">
         <div className="px-section flex">
           <Drawer>
             <DrawerTrigger asChild>
@@ -52,32 +51,15 @@ export const DashboardScreen = () => {
             </DrawerContent>
           </Drawer>
         </div>
-        <div className="flex flex-grow-0 flex-col space-y-1">
-          <h3 className="pl-section">Rounds</h3>
-          <ul className="min-h-[75px] space-y-2 font-light">
-            {/* {fakeRounds.map((round) => (
-              <div key={round.id} className="flex space-x-4">
-                <time>
-                  {round.date} @ {round.course.name}
-                </time>
-                <div>
-                  {round.status && <RoundStatus status={round.status} />}
-                </div>
-              </div>
-            ))} */}
-          </ul>
-        </div>
-        <div className="flex flex-grow-0 flex-col space-y-1">
-          <h3 className="pl-section">Golfers</h3>
-          <ul className="min-h-[75px] space-y-2 overflow-auto font-light">
-            {/* {fakeRounds.map((round) => (
-              <div key={round.id}>
-                <time>
-                  {round.date} @ {round.course.name}
-                </time>
-              </div>
-            ))} */}
-          </ul>
+        <div className="mb-4">
+          <div className="space-y-1">
+            <h3 className="pl-section">Rounds</h3>
+            <RoundsList />
+          </div>
+          <div className="space-y-1">
+            <h3 className="pl-section">Golfers</h3>
+            <GolfersList />
+          </div>
         </div>
       </div>
     </div>

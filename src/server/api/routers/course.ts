@@ -79,14 +79,4 @@ export const courseRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.delete(courses).where(eq(courses.id, input.id));
     }),
-  getNewRoundFormOptions: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.transaction(async (trx) => {
-      const courses = await trx.query.courses.findMany({
-        orderBy: (course, { asc }) => [asc(course.name)],
-      });
-
-      const golfers = await trx.query.golfers.findMany();
-      return { courses, golfers };
-    });
-  }),
 });

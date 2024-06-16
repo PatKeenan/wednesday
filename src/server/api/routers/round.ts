@@ -7,7 +7,8 @@ import {
 
 import {
   golferSelectSchema,
-  golfersToRoundsRelation,
+  golfersToRounds,
+  golfersToRoundsRelations,
   roundInsertSchema,
   roundInsertWithGolfersSchema,
   rounds,
@@ -20,9 +21,17 @@ export const roundRouter = createTRPCRouter({
     return await ctx.db.query.rounds.findMany({
       orderBy: (rounds, { desc }) => [desc(rounds.date)],
       with: {
-        course: true,
-        golfers: true,
-        scores: true,
+        course: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+        golfers: {
+          with: {
+            golfer: true,
+          },
+        },
       },
     });
   }),
@@ -33,8 +42,11 @@ export const roundRouter = createTRPCRouter({
         where: (rounds, { eq }) => eq(rounds.id, input.id),
         with: {
           course: true,
-          golfers: true,
-          scores: true,
+          golfers: {
+            with: {
+              golfer: true,
+            },
+          },
         },
       });
     }),
@@ -73,10 +85,7 @@ export const roundRouter = createTRPCRouter({
           return;
         }
 
-        await trx
-          .insert(golfersToRoundsRelation)
-          .values(golfersToInsert)
-          .execute();
+        await trx.insert(golfersToRounds).values(golfersToInsert).execute();
 
         return round[0];
       });
