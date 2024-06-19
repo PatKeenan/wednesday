@@ -1,15 +1,8 @@
-import { z } from "zod";
-
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 import {
   courseInsertSchema,
   courseSelectSchema,
-  holeInsertSchema,
   holes,
 } from "@/server/db/schema";
 
@@ -18,12 +11,12 @@ import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 export const courseRouter = createTRPCRouter({
-  getCourses: publicProcedure.query(async ({ ctx }) => {
+  getCourses: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.courses.findMany({
       orderBy: (course, { asc }) => [asc(course.name)],
     });
   }),
-  getCourse: publicProcedure
+  getCourse: protectedProcedure
     .input(courseSelectSchema.pick({ id: true }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.courses.findFirst({
@@ -35,7 +28,7 @@ export const courseRouter = createTRPCRouter({
         },
       });
     }),
-  createCourse: publicProcedure
+  createCourse: protectedProcedure
     .input(courseInsertSchema)
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.db.transaction(async (trx) => {
@@ -53,7 +46,7 @@ export const courseRouter = createTRPCRouter({
           });
         }
         const holesToInsert = Array.from({
-          length: returnedCourse.holes || 18,
+          length: returnedCourse.total_holes ?? 18,
         }).map((_, i) => ({
           courseId: returnedCourse.id,
           holeNumber: i + 1,
@@ -64,7 +57,7 @@ export const courseRouter = createTRPCRouter({
       });
       return result;
     }),
-  updateCourse: publicProcedure
+  updateCourse: protectedProcedure
     .input(courseSelectSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.db
@@ -74,7 +67,7 @@ export const courseRouter = createTRPCRouter({
         })
         .where(eq(courses.id, input.id));
     }),
-  deleteCourse: publicProcedure
+  deleteCourse: protectedProcedure
     .input(courseSelectSchema.pick({ id: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.delete(courses).where(eq(courses.id, input.id));

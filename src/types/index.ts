@@ -13,14 +13,3 @@ export type HoleSchema = z.infer<typeof holeSelectSchema>;
 export type CourseSchema = z.infer<typeof courseSelectSchema>;
 export type ScoreSchema = z.infer<typeof scoreSelectSchema>;
 export type RoundSchema = z.infer<typeof roundSelectSchema>;
-
-const roundStatusTypeSchema = z.enum([
-  "upcoming",
-  "booked",
-  "completed",
-  "pending",
-  "in-progress",
-  "canceled",
-  "rescheduled",
-]);
-export type RoundStatusType = z.infer<typeof roundStatusTypeSchema>;

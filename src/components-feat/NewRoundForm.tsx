@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import type { RoundSchema, RoundStatusType } from "@/types";
+import type { RoundSchema } from "@/types";
 
 import type { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -26,30 +26,19 @@ import {
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  roundInsertSchema,
-  roundInsertWithGolfersSchema,
-} from "@/server/db/schema";
+import { roundInsertWithGolfersSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
-import { formatDate } from "@/lib/utils";
-
-const roundStatusOptions: RoundStatusType[] = [
-  "upcoming",
-  "booked",
-  "completed",
-  "pending",
-  "in-progress",
-  "canceled",
-  "rescheduled",
-];
+import { formatDate, roundStatuses } from "@/lib/utils";
+import { DrawerTrigger } from "@/components/ui/drawer";
 
 export const NewRoundForm = ({
   defaultValues,
 }: {
   defaultValues?: RoundSchema;
 }) => {
-  const { data, isLoading, isError } =
-    api.general.getNewRoundFormOptions.useQuery();
+  const utils = api.useUtils();
+
+  const { data } = api.general.getNewRoundFormOptions.useQuery();
 
   const { golfers, courses } = React.useMemo(
     () => ({
@@ -59,12 +48,21 @@ export const NewRoundForm = ({
     [data],
   );
 
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+
   const golferIds = React.useMemo(
     () => golfers.map(({ id }) => ({ id })) ?? [],
     [golfers],
   );
 
-  const { mutate } = api.round.createRound.useMutation();
+  const { mutate, isPending, isSuccess } = api.round.createRound.useMutation({
+    onSettled: async () => {
+      await utils.round.invalidate();
+      setTimeout(() => {
+        triggerRef.current?.click();
+      }, 500);
+    },
+  });
 
   const form = useForm<z.infer<typeof roundInsertWithGolfersSchema>>({
     resolver: zodResolver(roundInsertWithGolfersSchema),
@@ -124,7 +122,7 @@ export const NewRoundForm = ({
                         onValueChange={(value) =>
                           field.onChange(
                             courses?.find((c) => c.id === parseInt(value, 10))
-                              ?.id || null,
+                              ?.id ?? null,
                           )
                         }
                       >
@@ -157,7 +155,12 @@ export const NewRoundForm = ({
                       <Input
                         type="number"
                         step={9}
+                        defaultValue={18}
                         className="focus:text-[17px]"
+                        value={field.value ?? 18}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value, 10))
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -174,14 +177,14 @@ export const NewRoundForm = ({
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={roundStatusOptions[0]}
+                      defaultValue={roundStatuses[0]}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
 
                       <SelectContent>
-                        {roundStatusOptions.map((status) => (
+                        {roundStatuses.map((status) => (
                           <SelectItem key={status} value={status}>
                             {status}
                           </SelectItem>
@@ -209,16 +212,15 @@ export const NewRoundForm = ({
                         <FormControl>
                           <Checkbox
                             className="h-5 w-5"
-                            checked={
-                              field &&
-                              field.value?.some((g) => g.id === golfer.id)
-                            }
+                            checked={field.value?.some(
+                              (g) => g.id === golfer.id,
+                            )}
                             onCheckedChange={(checked) => {
                               if (!field) return;
                               const golferFormatted = { id: golfer.id };
                               return checked
                                 ? field.onChange([
-                                    ...(field?.value || []),
+                                    ...(field?.value ?? []),
                                     golferFormatted,
                                   ])
                                 : field.onChange(
@@ -237,14 +239,13 @@ export const NewRoundForm = ({
               )}
             />
           </div>
-
+          <DrawerTrigger ref={triggerRef}></DrawerTrigger>
           <Button
-            /* disabled={!form.formState.isValid} */
-
             type="submit"
             className="flex-shrink-0 disabled:opacity-60"
+            disabled={isPending}
           >
-            Save
+            {isPending ? "Saving..." : isSuccess ? "Success!" : "Save"}
           </Button>
         </form>
       </Form>

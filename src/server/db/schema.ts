@@ -23,14 +23,16 @@ export const scores = createTable(
     id: serial("id").primaryKey(),
     holeId: integer("holeId")
       .notNull()
-      .references(() => holes.id),
+      .references(() => holes.id, { onDelete: "cascade" }),
     roundId: integer("roundId")
       .notNull()
-      .references(() => rounds.id),
-    golferId: integer("golfer")
+      .references(() => rounds.id, { onDelete: "cascade" }),
+    golferId: integer("golferId")
       .notNull()
-      .references(() => golfers.id),
-    score: integer("score").notNull(),
+      .references(() => golfers.id, { onDelete: "cascade" }),
+    strokes: integer("strokes"),
+    putts: integer("putts"),
+    drive: varchar("drive", { length: 256 }),
   },
   (score) => ({
     holeIdIdx: index("score_holeId_idx").on(score.holeId),
@@ -61,6 +63,7 @@ export const golfers = createTable(
 
 export const golferRelations = relations(golfers, ({ many }) => ({
   golfersToRounds: many(golfersToRounds),
+  scores: many(scores),
 }));
 
 export const golferInsertSchema = createInsertSchema(golfers);
@@ -124,7 +127,7 @@ export const roundSelectSchema = createSelectSchema(rounds);
 
 export type RoundSelect = zType.infer<typeof roundSelectSchema>;
 export type RoundSelectWithCourseAndGolfers = RoundSelect & {
-  course?: { id: number; name: string };
+  course?: { id: number; name: string; holes?: number };
   golfers?: { golfer: { id: number; name: string } }[];
 };
 
@@ -140,7 +143,7 @@ export const courses = createTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     par: integer("par"),
-    holes: integer("holes"),
+    total_holes: integer("holes"),
   },
   (course) => ({
     nameIndex: index("course_name_idx").on(course.name),
@@ -172,8 +175,9 @@ export const holes = createTable(
   }),
 );
 
-export const holeRelations = relations(holes, ({ one }) => ({
+export const holeRelations = relations(holes, ({ one, many }) => ({
   course: one(courses, { fields: [holes.courseId], references: [courses.id] }),
+  scores: many(scores),
 }));
 
 export const holeInsertSchema = createInsertSchema(holes);

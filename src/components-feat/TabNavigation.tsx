@@ -44,10 +44,17 @@ export const TabNavigation = () => {
 
     return false;
   };
-  return (
-    <div>
+
+  const shouldShow = React.useMemo(() => {
+    // Do not show if the pathname contains a number after the last slash
+    const regex = /\d+$/;
+    return !pathname.match(regex);
+  }, [pathname]);
+
+  return shouldShow ? (
+    <div className="h-20 flex-shrink-0 pt-3">
       <nav>
-        <ul className="text-foreground flex items-center justify-around px-6">
+        <ul className="flex items-center justify-around px-6 text-foreground">
           {navItems.map((item) => (
             <li
               key={item.href}
@@ -74,5 +81,5 @@ export const TabNavigation = () => {
         </ul>
       </nav>
     </div>
-  );
+  ) : null;
 };

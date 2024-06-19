@@ -5,6 +5,8 @@ import { holeRouter } from "@/server/api/routers/hole";
 import { roundRouter } from "@/server/api/routers/round";
 import { golferRouter } from "@/server/api/routers/golfer";
 import { generalRouter } from "./routers/general";
+import { scoreRouter } from "./routers/score";
+import type { inferRouterOutputs } from "@trpc/server";
 
 export const appRouter = createTRPCRouter({
   round: roundRouter,
@@ -13,10 +15,18 @@ export const appRouter = createTRPCRouter({
   course: courseRouter,
   holes: holeRouter,
   general: generalRouter,
+  score: scoreRouter,
 });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+export type RoundOutput = RouterOutput["round"];
+export type GolferOutput = RouterOutput["golfer"];
+export type HoleOutput = RouterOutput["hole"];
+export type CourseOutput = RouterOutput["course"];
+export type GeneralOutput = RouterOutput["general"];
 
 /**
  * Create a server-side caller for the tRPC API.

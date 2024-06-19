@@ -4,14 +4,12 @@ import { RoundStatus } from "@/components/RoundStatus";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatDate } from "@/lib/utils";
+import { formatDate, isRoundStatusType } from "@/lib/utils";
 import { type RoundSelectWithCourseAndGolfers } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import Link from "next/link";
@@ -44,6 +42,9 @@ export const RoundsList = () => {
   ) : (
     <ScrollArea className="px-section">
       <ul className="flex flex-col gap-3 py-3">
+        {roundsQuery?.length === 0 && (
+          <p className="text-center">No rounds found</p>
+        )}
         {roundsQuery?.map((round) => (
           <Link key={round.id} href={`/dashboard/rounds/${round.id}`}>
             <RoundsCard {...round} />
@@ -59,13 +60,17 @@ const RoundsCard = ({
   id,
   ...round
 }: RoundSelectWithCourseAndGolfers) => {
+  const roundStatus = React.useMemo(
+    () => (isRoundStatusType(round.status) ? round.status : "Pending"),
+    [round.status],
+  );
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex w-full items-center justify-between">
           <p>{round.course?.name}</p>
           <div>
-            <RoundStatus status={round.status} />
+            <RoundStatus status={roundStatus} />
           </div>
         </CardTitle>
         <CardDescription className="space-y-2">

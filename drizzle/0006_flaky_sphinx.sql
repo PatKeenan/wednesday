@@ -1,0 +1,1 @@
+ALTER TABLE "mid-week-gc_score" DROP COLUMN IF EXISTS "meta";

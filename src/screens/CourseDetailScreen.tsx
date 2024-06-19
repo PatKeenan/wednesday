@@ -51,7 +51,7 @@ export const CourseDetailScreen = ({ params }: { params: { id: string } }) => {
   const coursePar = React.useMemo(
     () =>
       course?.holes.reduce((acc, curr) => {
-        return acc + (curr?.par || 0);
+        return acc + (curr?.par ?? 0);
         return acc;
       }, 0),
     [course?.holes],
@@ -61,12 +61,11 @@ export const CourseDetailScreen = ({ params }: { params: { id: string } }) => {
     <div className="grid h-full w-full place-items-center">Loading...</div>
   ) : (
     <DetailScreenLayout
-      backLink="/dashboard/courses"
-      headerTitle={course?.name || "Course"}
+      headerTitle={course?.name ?? "Course"}
       onDeleteClick={handleDelete}
     >
       <Tabs
-        className="px-section flex w-full flex-1 flex-grow flex-col overflow-hidden py-2"
+        className="flex w-full flex-1 flex-grow flex-col overflow-hidden px-section py-2"
         defaultValue="overview"
       >
         <TabsList>
@@ -89,7 +88,7 @@ export const CourseDetailScreen = ({ params }: { params: { id: string } }) => {
           className="-mx-section flex flex-1 flex-grow flex-col overflow-auto"
         >
           <div className="space-y-2">
-            <ScrollArea className="px-section mb-10 h-full flex-grow">
+            <ScrollArea className="mb-10 h-full flex-grow px-section">
               <Accordion type="single" collapsible className="w-full">
                 {course?.holes.map((hole) => (
                   <AccordionItem value={hole.id.toString()} key={hole.id}>
@@ -131,9 +130,9 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
   const handleSubmit = (data: HolesInsert) => {
     mutate({
       ...hole,
-      par: data.par || 0,
-      yards: data.yards || 0,
-      description: data.description || "",
+      par: data.par ?? 0,
+      yards: data.yards ?? 0,
+      description: data.description ?? "",
     });
   };
 
@@ -141,9 +140,9 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
     resolver: zodResolver(holeInsertSchema),
     defaultValues: {
       ...hole,
-      par: par || 0,
-      yards: yards || 0,
-      description: description || "",
+      par: par ?? 0,
+      yards: yards ?? 0,
+      description: description ?? "",
     },
   });
 
@@ -166,7 +165,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
                     <FormItem>
                       <FormControl>
                         <Input
-                          value={value || 0}
+                          value={value ?? 0}
                           onChange={(e) =>
                             form.setValue("par", parseInt(e.target.value, 10))
                           }
@@ -181,7 +180,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
               />
             ) : (
               <p className="flex min-h-9 min-w-[80px] items-center">
-                {par || "unset"}
+                {par ?? "unset"}
               </p>
             )}
           </div>
@@ -197,7 +196,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
                     <FormItem>
                       <FormControl>
                         <Input
-                          value={value || 0}
+                          value={value ?? 0}
                           onChange={(e) =>
                             form.setValue("yards", parseInt(e.target.value, 10))
                           }
@@ -212,7 +211,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
               />
             ) : (
               <p className="flex min-h-9 min-w-[100px] items-center">
-                {yards || "n/a"}
+                {yards ?? "n/a"}
               </p>
             )}
           </div>
@@ -229,7 +228,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        value={value || ""}
+                        value={value ?? ""}
                         {...fieldRest}
                         className="w-full bg-white focus:text-[17px] "
                       />
@@ -239,7 +238,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
               }}
             />
           ) : (
-            <p>{description || "n/a"}</p>
+            <p>{description ?? "n/a"}</p>
           )}
         </div>
 
@@ -272,7 +271,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
             onClick={() => setIsEditing(true)}
             type="button"
             variant="outline"
-            className="border-foreground/40 w-full"
+            className="w-full border-foreground/40"
           >
             Edit
           </Button>

@@ -36,6 +36,62 @@
       "when": 1718545796204,
       "tag": "0004_odd_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1718670315123,
+      "tag": "0005_large_machine_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1718673662983,
+      "tag": "0006_flaky_sphinx",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1718673696465,
+      "tag": "0007_acoustic_brood",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1718673756780,
+      "tag": "0008_bumpy_omega_red",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1718674679257,
+      "tag": "0009_black_vengeance",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1718675896713,
+      "tag": "0010_stale_vin_gonzales",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1718676790861,
+      "tag": "0011_green_goliath",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1718677220414,
+      "tag": "0012_youthful_harry_osborn",
+      "breakpoints": true
     }
   ]
 }

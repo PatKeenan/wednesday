@@ -30,3 +30,18 @@ export function formatDate(date: Date) {
     pretty,
   };
 }
+
+export const roundStatuses = [
+  "Pending",
+  "Completed",
+  "Canceled",
+  "In-progress",
+  "Booked",
+  "Paused",
+] as const;
+export type RoundStatus = (typeof roundStatuses)[number];
+export const isRoundStatusType = (status: unknown): status is RoundStatus => {
+  return (
+    typeof status === "string" && roundStatuses.includes(status as RoundStatus)
+  );
+};

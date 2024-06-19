@@ -34,7 +34,7 @@ export const NewCourseForm = ({
     defaultValues: {
       ...defaultValues,
       name: defaultValues?.name,
-      holes: defaultValues?.holes ?? 18,
+      total_holes: defaultValues?.total_holes ?? 18,
     },
   });
 
@@ -83,7 +83,7 @@ export const NewCourseForm = ({
             />
             <FormField
               control={form.control}
-              name="holes"
+              name="total_holes"
               render={({ field }) => (
                 <FormItem className="space-y-3">
                   <FormLabel>Number of Holes</FormLabel>

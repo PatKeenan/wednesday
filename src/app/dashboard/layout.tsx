@@ -1,19 +1,25 @@
+import { NotAuthenticated } from "@/components-feat/NotAuthenticated";
 import { TabNavigation } from "@/components-feat/TabNavigation";
+import { getServerAuthSession } from "@/server/auth";
 import React from "react";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+
+  if (!session) {
+    return <NotAuthenticated />;
+  }
+
   return (
     <main className="mx-auto flex h-full w-full max-w-xl flex-1 flex-col overflow-hidden">
       <div className="flex flex-1 flex-grow flex-col overflow-hidden">
         {children}
       </div>
-      <div className="h-20 flex-shrink-0 pt-3">
-        <TabNavigation />
-      </div>
+      <TabNavigation />
     </main>
   );
 }

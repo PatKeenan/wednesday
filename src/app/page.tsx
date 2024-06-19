@@ -5,13 +5,11 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const session = await getServerAuthSession();
 
-  /* if (!session) {
+  if (!session) {
     return <NotAuthenticated />;
-  } */
+  }
 
-  /* if (session) {
+  if (session) {
     redirect("/dashboard");
-  } */
-
-  redirect("/dashboard");
+  }
 }
