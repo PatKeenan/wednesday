@@ -117,15 +117,14 @@ type HoleProps = {
 const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const { par, yards, description } = hole;
-  const { mutate, isPending, isSuccess, isError } =
-    api.holes.updateHole.useMutation({
-      onSettled() {
-        onSuccess?.();
-        setTimeout(() => {
-          setIsEditing(false);
-        }, 750);
-      },
-    });
+  const { mutate, isPending } = api.holes.updateHole.useMutation({
+    onSettled() {
+      onSuccess?.();
+      setTimeout(() => {
+        setIsEditing(false);
+      }, 750);
+    },
+  });
 
   const handleSubmit = (data: HolesInsert) => {
     mutate({
@@ -160,6 +159,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
                 control={form.control}
                 name="par"
                 render={({ field }) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const { value, onChange, ...fieldRest } = field;
                   return (
                     <FormItem>
@@ -191,6 +191,7 @@ const Hole: React.FC<HoleProps> = ({ hole, onSuccess }) => {
                 control={form.control}
                 name="yards"
                 render={({ field }) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const { value, onChange, ...fieldRest } = field;
                   return (
                     <FormItem>

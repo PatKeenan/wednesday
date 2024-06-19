@@ -4,7 +4,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 
-import { RoundStatus } from "@/components/RoundStatus";
 import {
   Drawer,
   DrawerClose,
@@ -30,7 +29,7 @@ export const DashboardScreen = () => {
         className="mx-auto h-[200px] w-auto flex-shrink-0 "
       />
       <div className="space-y-10">
-        <div className="px-section flex">
+        <div className="flex px-section">
           <Drawer>
             <DrawerTrigger asChild>
               <Button className="h-12 w-full space-x-1">

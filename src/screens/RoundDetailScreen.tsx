@@ -17,7 +17,7 @@ export const RoundDetailScreen = ({ params }: { params: { id: string } }) => {
 
   const id = params.id;
   const router = useRouter();
-  const { data, isLoading, isError, refetch } = api.round.getRound.useQuery({
+  const { data, isLoading, refetch } = api.round.getRound.useQuery({
     id: parseInt(id, 10),
     withHoles: true,
   });

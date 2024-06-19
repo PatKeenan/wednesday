@@ -1,7 +1,7 @@
-import { CourseSchema } from "@/types";
+import type { CourseSchema } from "@/types";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 
-export const CourseCard = ({ name, id }: CourseSchema) => {
+export const CourseCard = ({ name }: CourseSchema) => {
   return (
     <Card>
       <CardHeader>

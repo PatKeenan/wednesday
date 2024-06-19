@@ -13,7 +13,6 @@ import {
   DotsHorizontalIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type DetailScreenLayoutProps = {

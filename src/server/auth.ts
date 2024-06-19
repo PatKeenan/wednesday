@@ -8,7 +8,6 @@ import {
 import { type Adapter } from "next-auth/adapters";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { env } from "@/env";
 import { db } from "@/server/db";
 import {
   accounts,
@@ -49,13 +48,13 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    jwt: async ({ token, user, session }) => {
+    jwt: async ({ token, user }) => {
       if (user) {
         token.user = user; // TODO: remove this line in the future
       }
       return token;
     },
-    session: ({ session, user, token }) => {
+    session: ({ session }) => {
       return {
         ...session,
         user: {},
@@ -80,7 +79,7 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (
           credentials?.username == "Creamy" &&
           credentials.password == "Cream-Gang2024!"

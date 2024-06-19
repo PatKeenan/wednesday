@@ -12,7 +12,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import type { CourseSchema, RoundSchema } from "@/types";
 import { NewRoundForm } from "@/components-feat/NewRoundForm";
 import { SmallILogoLayout } from "@/layouts/SmallLogoLayout";
 import { RoundsList } from "@/components-feat/RoundsList";
@@ -24,7 +23,7 @@ export const RoundsScreen = () => {
   return (
     <SmallILogoLayout>
       <div className="h-full space-y-10 pt-8">
-        <div className="px-section flex justify-between">
+        <div className="flex justify-between px-section">
           <h2 className="mt-auto">Rounds</h2>
           <div className="flex">
             <Drawer>

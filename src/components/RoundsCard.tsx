@@ -1,4 +1,4 @@
-import { CourseSchema, RoundSchema } from "@/types";
+import type { CourseSchema, RoundSchema } from "@/types";
 
 export const RoundsCard = ({
   course,

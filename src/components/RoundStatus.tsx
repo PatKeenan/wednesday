@@ -1,4 +1,4 @@
-import { RoundStatus as RoundStatusType } from "@/lib/utils";
+import type { RoundStatus as RoundStatusType } from "@/lib/utils";
 import * as React from "react";
 
 const statusColors: Record<RoundStatusType, string> = {

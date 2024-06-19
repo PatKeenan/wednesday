@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { GolferSelect } from "@/server/db/schema";
+import type { GolferSelect } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import Link from "next/link";
 import React from "react";
@@ -45,7 +45,7 @@ export const GolfersList = () => {
   );
 };
 
-const GolferCard = ({ name, id }: GolferSelect) => {
+const GolferCard = ({ name }: GolferSelect) => {
   return (
     <Card>
       <CardHeader>

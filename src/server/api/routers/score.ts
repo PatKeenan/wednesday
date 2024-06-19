@@ -73,6 +73,7 @@ export const scoreRouter = createTRPCRouter({
   upsertScore: protectedProcedure
     .input(scoreInsertSchema)
     .mutation(async ({ ctx, input }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id, ...rest } = input;
       return await ctx.db
         .insert(scores)
