@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import {
   getServerSession,
@@ -57,9 +58,7 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, user, token }) => {
       return {
         ...session,
-        user: {
-          ...token.user,
-        },
+        user: {},
       };
     },
   },
