@@ -92,7 +92,7 @@ export const RoundSummary: React.FC<{
       </div>
       <div className="mt-auto flex w-full px-section pb-section">
         <Button className="w-full" onClick={handleRestart}>
-          Back to Holes?
+          Review Holes
         </Button>
       </div>
     </DetailScreenLayout>

@@ -26,7 +26,6 @@ export const ActiveRoundStepper = ({
   const courseHole = round.course.holes.find(
     (hole) => hole.holeNumber === currentHole,
   );
-  console.log("courseHole", courseHole);
   return (
     <div className="mt-2 flex h-full flex-auto flex-col px-section">
       <div className="space-y-3">

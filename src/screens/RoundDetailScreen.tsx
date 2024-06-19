@@ -41,37 +41,21 @@ export const RoundDetailScreen = ({ params }: { params: { id: string } }) => {
       ...data,
       status: "in-progress",
       inProgress: true,
-      currentHole: data.currentHole ?? 1,
     });
     setIsActive(true);
     setCurrentHole(data.currentHole ?? 1);
   };
 
   const handleNextHole = () => {
-    if (!data) {
-      return;
-    }
-
     if (currentHole < (data?.numHoles ?? 18)) {
       setCurrentHole(currentHole + 1);
-      updateRound({
-        ...data,
-        currentHole: currentHole + 1,
-      });
     }
     return;
   };
 
   const handlePrevHole = () => {
-    if (!data) {
-      return;
-    }
     if (currentHole > 1) {
       setCurrentHole(currentHole - 1);
-      updateRound({
-        ...data,
-        currentHole: currentHole - 1,
-      });
     }
     return;
   };
@@ -85,8 +69,7 @@ export const RoundDetailScreen = ({ params }: { params: { id: string } }) => {
       updateRound({
         ...data,
         status: status ?? "Paused",
-        currentHole: currentHole,
-        inProgress: false,
+        inProgress: true,
       });
     }
 
@@ -96,7 +79,6 @@ export const RoundDetailScreen = ({ params }: { params: { id: string } }) => {
         status: status ?? "Completed",
         completed: true,
         inProgress: false,
-        currentHole: currentHole,
       });
     }
     await refetch();
@@ -106,29 +88,14 @@ export const RoundDetailScreen = ({ params }: { params: { id: string } }) => {
   React.useEffect(() => {
     if (data?.inProgress && data?.status === "In-progress") {
       setIsActive(true);
-      setCurrentHole(data.currentHole ?? 1);
       return;
     }
-
-    if (
-      data?.inProgress &&
-      !data?.completed &&
-      data?.status !== "In-progress"
-    ) {
-      setCurrentHole(data?.currentHole ?? 1);
-      return;
-    }
-
-    if (data?.completed && data?.status === "Completed") {
-      setIsActive(false);
-    }
-  }, [data?.inProgress, data?.status, data?.currentHole, data?.completed]);
+  }, [data?.inProgress, data?.status]);
 
   const coursePar = React.useMemo(
     () =>
       data?.course?.holes.reduce((acc, curr) => {
         return acc + (curr?.par ?? 0);
-        return acc;
       }, 0),
     [data?.course?.holes],
   );
@@ -137,8 +104,13 @@ export const RoundDetailScreen = ({ params }: { params: { id: string } }) => {
     return <div>Loading...</div>;
   }
 
-  if (data?.completed && data?.status === "Completed") {
-    return <RoundSummary round={data} />;
+  const handleReviewRound = () => {
+    setIsActive(true);
+    setCurrentHole(data?.numHoles ?? 18);
+  };
+
+  if (data?.completed && data?.status === "Completed" && !isActive) {
+    return <RoundSummary round={data} handleRestart={handleReviewRound} />;
   }
 
   return isActive && data ? (
