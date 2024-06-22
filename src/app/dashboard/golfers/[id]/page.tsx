@@ -1,1 +1,1 @@
-export { GolfersDetailScreen as default } from "@/screens/GolfersDetailScreen";
+export { GolferDetailScreen as default } from "@/screens/GolfersDetailScreen";
